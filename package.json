@@ -1,0 +1,139 @@
+{
+  "name": "@omnidev-tools/object-array-async-tools",
+  "version": "1.0.0",
+  "description": "Object, array, and async utilities for transforming data, managing collections, and controlling asynchronous workflows.",
+  "author": "OmniDev Tools",
+  "license": "MIT",
+  "keywords": [
+    "deep-clone",
+    "deep-equal",
+    "object-diff",
+    "object-clean",
+    "chunk",
+    "group-by",
+    "unique-array",
+    "smart-sort",
+    "debounce",
+    "throttle",
+    "retry",
+    "promise-timeout",
+    "async-queue",
+    "utilities",
+    "typescript",
+    "zero-dependencies"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "oa-tools": "dist/bin/cli.cjs",
+    "oa-clone": "dist/bin/cli.cjs",
+    "oa-diff": "dist/bin/cli.cjs",
+    "oa-clean": "dist/bin/cli.cjs",
+    "oa-chunk": "dist/bin/cli.cjs",
+    "oa-sort": "dist/bin/cli.cjs",
+    "oa-retry": "dist/bin/cli.cjs",
+    "oa-timeout": "dist/bin/cli.cjs"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./deep-clone": {
+      "types": "./dist/deep-clone/index.d.ts",
+      "import": "./dist/deep-clone/index.mjs",
+      "require": "./dist/deep-clone/index.cjs"
+    },
+    "./deep-equal": {
+      "types": "./dist/deep-equal/index.d.ts",
+      "import": "./dist/deep-equal/index.mjs",
+      "require": "./dist/deep-equal/index.cjs"
+    },
+    "./object-diff": {
+      "types": "./dist/object-diff/index.d.ts",
+      "import": "./dist/object-diff/index.mjs",
+      "require": "./dist/object-diff/index.cjs"
+    },
+    "./object-clean": {
+      "types": "./dist/object-clean/index.d.ts",
+      "import": "./dist/object-clean/index.mjs",
+      "require": "./dist/object-clean/index.cjs"
+    },
+    "./chunk": {
+      "types": "./dist/chunk/index.d.ts",
+      "import": "./dist/chunk/index.mjs",
+      "require": "./dist/chunk/index.cjs"
+    },
+    "./group-by": {
+      "types": "./dist/group-by/index.d.ts",
+      "import": "./dist/group-by/index.mjs",
+      "require": "./dist/group-by/index.cjs"
+    },
+    "./unique-array": {
+      "types": "./dist/unique-array/index.d.ts",
+      "import": "./dist/unique-array/index.mjs",
+      "require": "./dist/unique-array/index.cjs"
+    },
+    "./smart-sort": {
+      "types": "./dist/smart-sort/index.d.ts",
+      "import": "./dist/smart-sort/index.mjs",
+      "require": "./dist/smart-sort/index.cjs"
+    },
+    "./debounce": {
+      "types": "./dist/debounce/index.d.ts",
+      "import": "./dist/debounce/index.mjs",
+      "require": "./dist/debounce/index.cjs"
+    },
+    "./throttle": {
+      "types": "./dist/throttle/index.d.ts",
+      "import": "./dist/throttle/index.mjs",
+      "require": "./dist/throttle/index.cjs"
+    },
+    "./retry": {
+      "types": "./dist/retry/index.d.ts",
+      "import": "./dist/retry/index.mjs",
+      "require": "./dist/retry/index.cjs"
+    },
+    "./promise-timeout": {
+      "types": "./dist/promise-timeout/index.d.ts",
+      "import": "./dist/promise-timeout/index.mjs",
+      "require": "./dist/promise-timeout/index.cjs"
+    },
+    "./async-queue": {
+      "types": "./dist/async-queue/index.d.ts",
+      "import": "./dist/async-queue/index.mjs",
+      "require": "./dist/async-queue/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "bump:patch": "npm version patch",
+    "bump:minor": "npm version minor",
+    "bump:major": "npm version major",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build",
+    "publish:dry": "npm publish --dry-run"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@vitest/coverage-v8": "^3.0.7",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.7"
+  }
+}
