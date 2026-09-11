@@ -1,10 +1,16 @@
 # @omnidev-tools/object-array-async-tools
 
-[![npm version](https://img.shields.io/badge/npm-v1.0.0-blue.svg)](https://www.npmjs.com/package/@omnidev-tools/object-array-async-tools)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](tsconfig.json)
+[![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-brightgreen.svg)](package.json)
+[![Module](https://img.shields.io/badge/Module-ESM%20%7C%20CJS-orange.svg)]()
+
+<!-- [![CI Status](https://img.shields.io/badge/CI-Passing-brightgreen.svg)]() -->
+
+[![npm version](https://img.shields.io/badge/npm-v1.0.0-blue.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-101%20passed-success.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
+[![Node](https://img.shields.io/badge/Node-%3E%3D18.0.0-green.svg)](package.json)
 [![Coverage](https://img.shields.io/badge/coverage-96.3%25-brightgreen.svg)](docs/TESTING.md)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-success.svg)](package.json)
 
 A production-grade, **zero-runtime-dependency** TypeScript utility library and standalone CLI toolkit designed for high-performance data transformations, collection manipulation, and robust asynchronous control flow.
 
@@ -14,16 +20,19 @@ Built natively for **Node.js (>= 18.0.0)**, **Modern Browsers**, **Bun**, **Deno
 
 ## Table of Contents
 
-- [Key Features](#key-features)
-- [Tools & Utilities Overview](#tools--utilities-overview)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Subpath Imports (Tree-Shaking)](#subpath-imports-tree-shaking)
-- [CLI Toolkit](#cli-toolkit)
-- [Security Architecture](#security-architecture)
-- [NPM Scripts](#npm-scripts)
-- [Documentation Index](#documentation-index)
-- [License](#license)
+- [@omnidev-tools/object-array-async-tools](#omnidev-toolsobject-array-async-tools)
+  - [Table of Contents](#table-of-contents)
+  - [Key Features](#key-features)
+  - [Tools \& Utilities Overview](#tools--utilities-overview)
+  - [Installation](#installation)
+  - [Quick Start](#quick-start)
+  - [Subpath Imports (Tree-Shaking)](#subpath-imports-tree-shaking)
+  - [CLI Toolkit](#cli-toolkit)
+    - [Exit Codes](#exit-codes)
+  - [Security Architecture](#security-architecture)
+  - [NPM Scripts](#npm-scripts)
+  - [Documentation Index](#documentation-index)
+  - [License](#license)
 
 ---
 
@@ -40,21 +49,21 @@ Built natively for **Node.js (>= 18.0.0)**, **Modern Browsers**, **Bun**, **Deno
 
 ## Tools & Utilities Overview
 
-| # | Utility | Category | Description |
-|---|---|---|---|
-| 1 | [`deepClone`](docs/FEATURES.md#1-deep-clone) | Object | Independent deep copy of nested objects/arrays handling circular references, Maps, Sets, Dates, RegExps, TypedArrays, and Errors. |
-| 2 | [`deepEqual`](docs/FEATURES.md#2-deep-equal) | Object | Recursive structural equality comparator for complex graphs, circular structures, Maps, Sets, and binary buffers. |
-| 3 | [`objectDiff`](docs/FEATURES.md#3-object-diff) | Object | Computes structural differences returning added, removed, and updated fields with flat dot-paths or nested hierarchies. |
-| 4 | [`objectClean`](docs/FEATURES.md#4-object-clean) | Object | Immutable cleaner filtering nulls, undefineds, empty strings, empty arrays, empty objects, and NaNs. |
-| 5 | [`chunk`](docs/FEATURES.md#5-chunk) | Array | Partitions arrays into uniform fixed-size batches for pagination, batch requests, and worker dispatching. |
-| 6 | [`groupBy` / `groupByMap`](docs/FEATURES.md#6-group-by) | Array | Groups elements by key or callback into a prototype-free record (`Object.create(null)`) or an ES6 Map. |
-| 7 | [`uniqueArray`](docs/FEATURES.md#7-unique-array) | Array | Removes duplicates while preserving order, supporting primitive fast-paths, key selectors, or deep structural equality. |
-| 8 | [`smartSort`](docs/FEATURES.md#8-smart-sort) | Array | Pure stable sorting supporting multi-field ordering, natural string collation (e.g. `v2` before `v10`), dates, and null placement. |
-| 9 | [`debounce`](docs/FEATURES.md#9-debounce) | Async | Delays callback execution until after a quiet period, supporting leading/trailing edges, maxWait guarantees, `cancel()`, and `flush()`. |
-| 10 | [`throttle`](docs/FEATURES.md#10-throttle) | Async | Regulates execution frequency to at most once per time window with configurable leading/trailing edges. |
-| 11 | [`retry`](docs/FEATURES.md#11-retry) | Async | Automatically retries failed async tasks with exponential/linear backoff, full/half jitter, error filters, and AbortSignal support. |
-| 12 | [`promiseTimeout`](docs/FEATURES.md#12-promise-timeout) | Async | Enforces execution deadlines, rejecting with `TimeoutError` or triggering fallback handlers with automated timer teardown. |
-| 13 | [`AsyncQueue`](docs/FEATURES.md#13-async-queue) | Async | Concurrency-limited worker queue supporting priority scheduling, per-task timeouts, pause/resume, and lifecycle hooks (`onIdle`). |
+| #   | Utility                                                 | Category | Description                                                                                                                             |
+| --- | ------------------------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | [`deepClone`](docs/FEATURES.md#1-deep-clone)            | Object   | Independent deep copy of nested objects/arrays handling circular references, Maps, Sets, Dates, RegExps, TypedArrays, and Errors.       |
+| 2   | [`deepEqual`](docs/FEATURES.md#2-deep-equal)            | Object   | Recursive structural equality comparator for complex graphs, circular structures, Maps, Sets, and binary buffers.                       |
+| 3   | [`objectDiff`](docs/FEATURES.md#3-object-diff)          | Object   | Computes structural differences returning added, removed, and updated fields with flat dot-paths or nested hierarchies.                 |
+| 4   | [`objectClean`](docs/FEATURES.md#4-object-clean)        | Object   | Immutable cleaner filtering nulls, undefineds, empty strings, empty arrays, empty objects, and NaNs.                                    |
+| 5   | [`chunk`](docs/FEATURES.md#5-chunk)                     | Array    | Partitions arrays into uniform fixed-size batches for pagination, batch requests, and worker dispatching.                               |
+| 6   | [`groupBy` / `groupByMap`](docs/FEATURES.md#6-group-by) | Array    | Groups elements by key or callback into a prototype-free record (`Object.create(null)`) or an ES6 Map.                                  |
+| 7   | [`uniqueArray`](docs/FEATURES.md#7-unique-array)        | Array    | Removes duplicates while preserving order, supporting primitive fast-paths, key selectors, or deep structural equality.                 |
+| 8   | [`smartSort`](docs/FEATURES.md#8-smart-sort)            | Array    | Pure stable sorting supporting multi-field ordering, natural string collation (e.g. `v2` before `v10`), dates, and null placement.      |
+| 9   | [`debounce`](docs/FEATURES.md#9-debounce)               | Async    | Delays callback execution until after a quiet period, supporting leading/trailing edges, maxWait guarantees, `cancel()`, and `flush()`. |
+| 10  | [`throttle`](docs/FEATURES.md#10-throttle)              | Async    | Regulates execution frequency to at most once per time window with configurable leading/trailing edges.                                 |
+| 11  | [`retry`](docs/FEATURES.md#11-retry)                    | Async    | Automatically retries failed async tasks with exponential/linear backoff, full/half jitter, error filters, and AbortSignal support.     |
+| 12  | [`promiseTimeout`](docs/FEATURES.md#12-promise-timeout) | Async    | Enforces execution deadlines, rejecting with `TimeoutError` or triggering fallback handlers with automated timer teardown.              |
+| 13  | [`AsyncQueue`](docs/FEATURES.md#13-async-queue)         | Async    | Concurrency-limited worker queue supporting priority scheduling, per-task timeouts, pause/resume, and lifecycle hooks (`onIdle`).       |
 
 ---
 
@@ -98,11 +107,11 @@ import {
   throttle,
   retry,
   promiseTimeout,
-  AsyncQueue
-} from '@omnidev-tools/object-array-async-tools';
+  AsyncQueue,
+} from "@omnidev-tools/object-array-async-tools";
 
 // 1. Safe Deep Cloning (Handles circular references)
-const graph: any = { name: 'Node A' };
+const graph: any = { name: "Node A" };
 graph.self = graph;
 const clonedGraph = deepClone(graph);
 console.log(clonedGraph.self === clonedGraph); // true (independent clone)
@@ -111,15 +120,15 @@ console.log(clonedGraph.self === clonedGraph); // true (independent clone)
 console.log(deepEqual({ a: [1, 2], d: new Date(0) }, { a: [1, 2], d: new Date(0) })); // true
 
 // 3. Object Diffing
-const before = { id: 1, config: { theme: 'light', debug: false } };
-const after = { id: 1, config: { theme: 'dark', port: 8080 } };
+const before = { id: 1, config: { theme: "light", debug: false } };
+const after = { id: 1, config: { theme: "dark", port: 8080 } };
 const diff = objectDiff(before, after);
 // diff.updated -> { 'config.theme': { before: 'light', after: 'dark' } }
 // diff.removed -> { 'config.debug': false }
 // diff.added   -> { 'config.port': 8080 }
 
 // 4. Object Cleaning
-const dirty = { name: 'Alice', bio: '', role: null, flags: [] };
+const dirty = { name: "Alice", bio: "", role: null, flags: [] };
 const clean = objectClean(dirty, { emptyStrings: true, emptyArrays: true });
 // { name: 'Alice' }
 
@@ -128,9 +137,12 @@ const batches = chunk([1, 2, 3, 4, 5], 2);
 // [[1, 2], [3, 4], [5]]
 
 // 6. Resilient Async Retries
-const data = await retry(async ({ attempt }) => {
-  return await fetchUserData(attempt);
-}, { retries: 3, backoff: 'exponential', factor: 2 });
+const data = await retry(
+  async ({ attempt }) => {
+    return await fetchUserData(attempt);
+  },
+  { retries: 3, backoff: "exponential", factor: 2 },
+);
 ```
 
 ---
@@ -140,19 +152,19 @@ const data = await retry(async ({ attempt }) => {
 To minimize bundle size in web applications, each utility can be imported individually via dedicated subpaths:
 
 ```typescript
-import { deepClone } from '@omnidev-tools/object-array-async-tools/deep-clone';
-import { deepEqual } from '@omnidev-tools/object-array-async-tools/deep-equal';
-import { objectDiff } from '@omnidev-tools/object-array-async-tools/object-diff';
-import { objectClean } from '@omnidev-tools/object-array-async-tools/object-clean';
-import { chunk } from '@omnidev-tools/object-array-async-tools/chunk';
-import { groupBy } from '@omnidev-tools/object-array-async-tools/group-by';
-import { uniqueArray } from '@omnidev-tools/object-array-async-tools/unique-array';
-import { smartSort } from '@omnidev-tools/object-array-async-tools/smart-sort';
-import { debounce } from '@omnidev-tools/object-array-async-tools/debounce';
-import { throttle } from '@omnidev-tools/object-array-async-tools/throttle';
-import { retry } from '@omnidev-tools/object-array-async-tools/retry';
-import { promiseTimeout } from '@omnidev-tools/object-array-async-tools/promise-timeout';
-import { AsyncQueue } from '@omnidev-tools/object-array-async-tools/async-queue';
+import { deepClone } from "@omnidev-tools/object-array-async-tools/deep-clone";
+import { deepEqual } from "@omnidev-tools/object-array-async-tools/deep-equal";
+import { objectDiff } from "@omnidev-tools/object-array-async-tools/object-diff";
+import { objectClean } from "@omnidev-tools/object-array-async-tools/object-clean";
+import { chunk } from "@omnidev-tools/object-array-async-tools/chunk";
+import { groupBy } from "@omnidev-tools/object-array-async-tools/group-by";
+import { uniqueArray } from "@omnidev-tools/object-array-async-tools/unique-array";
+import { smartSort } from "@omnidev-tools/object-array-async-tools/smart-sort";
+import { debounce } from "@omnidev-tools/object-array-async-tools/debounce";
+import { throttle } from "@omnidev-tools/object-array-async-tools/throttle";
+import { retry } from "@omnidev-tools/object-array-async-tools/retry";
+import { promiseTimeout } from "@omnidev-tools/object-array-async-tools/promise-timeout";
+import { AsyncQueue } from "@omnidev-tools/object-array-async-tools/async-queue";
 ```
 
 ---
@@ -188,6 +200,7 @@ oa-tools timeout --ms 5000 -- npm test
 ```
 
 ### Exit Codes
+
 - `0`: Success (or identical structures).
 - `1`: Operation failure / Difference detected with `--check` / Task execution failed.
 - `2`: CLI usage syntax error / Missing required arguments.
@@ -208,18 +221,18 @@ oa-tools timeout --ms 5000 -- npm test
 
 ## NPM Scripts
 
-| Script | Command | Purpose |
-|---|---|---|
-| `build` | `tsup` | Compiles dual ESM/CJS and `.d.ts` declarations. |
-| `test` | `vitest run` | Executes all 18 test suites once. |
-| `test:watch` | `vitest` | Runs Vitest in interactive watch mode. |
-| `test:coverage` | `vitest run --coverage` | Generates V8 code coverage reports. |
-| `typecheck` | `tsc --noEmit` | Strict TypeScript compiler validation. |
-| `bump:patch` | `npm version patch` | Increments patch version. |
-| `bump:minor` | `npm version minor` | Increments minor version. |
-| `bump:major` | `npm version major` | Increments major version. |
-| `prepublishOnly` | `npm run typecheck && npm run test && npm run build` | Automated pre-release verification pipeline. |
-| `publish:dry` | `npm publish --dry-run` | Verifies tarball contents without publishing. |
+| Script           | Command                                              | Purpose                                         |
+| ---------------- | ---------------------------------------------------- | ----------------------------------------------- |
+| `build`          | `tsup`                                               | Compiles dual ESM/CJS and `.d.ts` declarations. |
+| `test`           | `vitest run`                                         | Executes all 18 test suites once.               |
+| `test:watch`     | `vitest`                                             | Runs Vitest in interactive watch mode.          |
+| `test:coverage`  | `vitest run --coverage`                              | Generates V8 code coverage reports.             |
+| `typecheck`      | `tsc --noEmit`                                       | Strict TypeScript compiler validation.          |
+| `bump:patch`     | `npm version patch`                                  | Increments patch version.                       |
+| `bump:minor`     | `npm version minor`                                  | Increments minor version.                       |
+| `bump:major`     | `npm version major`                                  | Increments major version.                       |
+| `prepublishOnly` | `npm run typecheck && npm run test && npm run build` | Automated pre-release verification pipeline.    |
+| `publish:dry`    | `npm publish --dry-run`                              | Verifies tarball contents without publishing.   |
 
 ---
 
