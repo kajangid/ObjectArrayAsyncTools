@@ -34,7 +34,7 @@ Built natively for **Node.js (>= 18.0.0)**, **Modern Browsers**, **Bun**, **Deno
 - **Security by Default**: Defenses against prototype pollution attacks (`__proto__`, `constructor`, `prototype`) across object cloning, diffing, grouping, and cleaning.
 - **Universal Runtime Support**: Fully functional across Node.js 18+, Bun, Deno, modern web browsers, and edge environments like Cloudflare Workers.
 - **Standalone CLI**: High-performance unified binary (`oa-tools`) and dedicated binary aliases (`oa-clone`, `oa-diff`, `oa-clean`, `oa-chunk`, `oa-sort`, `oa-retry`, `oa-timeout`) supporting stdin pipes and file arguments.
-- **100% Test Pass Rate**: Thorough test suites with >96% statement and branch coverage via Vitest and V8 coverage.
+- **100% Test Pass Rate**: Thorough test suites with >96% statement and branch coverage via Vitest and V8 coverage (168 tests across 18 test files).
 
 ---
 
@@ -211,7 +211,7 @@ oa-tools timeout --ms 5000 -- npm test
 | Script | Command | Purpose |
 |---|---|---|
 | `build` | `tsup` | Compiles dual ESM/CJS and `.d.ts` declarations. |
-| `test` | `vitest run` | Executes all 17 test suites once. |
+| `test` | `vitest run` | Executes all 18 test suites once. |
 | `test:watch` | `vitest` | Runs Vitest in interactive watch mode. |
 | `test:coverage` | `vitest run --coverage` | Generates V8 code coverage reports. |
 | `typecheck` | `tsc --noEmit` | Strict TypeScript compiler validation. |

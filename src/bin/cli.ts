@@ -86,53 +86,8 @@ export async function readStdin(): Promise<string> {
   });
 }
 
-/**
- * Parses command-line arguments into flags and positional args.
- */
-export function parseArgs(rawArgs: string[]): {
-  flags: Record<string, string | boolean>;
-  positionals: string[];
-  commandArgs: string[];
-} {
-  const flags: Record<string, string | boolean> = {};
-  const positionals: string[] = [];
-  let commandArgs: string[] = [];
-
-  const doubleDashIdx = rawArgs.indexOf('--');
-  let parseList = rawArgs;
-  if (doubleDashIdx !== -1) {
-    parseList = rawArgs.slice(0, doubleDashIdx);
-    commandArgs = rawArgs.slice(doubleDashIdx + 1);
-  }
-
-  for (let i = 0; i < parseList.length; i++) {
-    const arg = parseList[i];
-    if (arg.startsWith('--')) {
-      const key = arg.slice(2);
-      if (key.includes('=')) {
-        const [k, v] = key.split('=', 2);
-        flags[k] = v;
-      } else if (i + 1 < parseList.length && !parseList[i + 1].startsWith('-')) {
-        flags[key] = parseList[i + 1];
-        i++;
-      } else {
-        flags[key] = true;
-      }
-    } else if (arg.startsWith('-') && arg.length > 1) {
-      const key = arg.slice(1);
-      if (i + 1 < parseList.length && !parseList[i + 1].startsWith('-')) {
-        flags[key] = parseList[i + 1];
-        i++;
-      } else {
-        flags[key] = true;
-      }
-    } else {
-      positionals.push(arg);
-    }
-  }
-
-  return { flags, positionals, commandArgs };
-}
+export { parseArgs } from '../shared/parser.js';
+import { parseArgs } from '../shared/parser.js';
 
 function resolveJsonInput(
   fileArg: string | undefined,
@@ -172,13 +127,13 @@ export async function runCli(
     effectiveArgs = [aliasCommand, ...argv];
   }
 
-  if (effectiveArgs.length === 0 || effectiveArgs.includes('--help') || effectiveArgs.includes('-h')) {
-    printHelp();
+  if (effectiveArgs.includes('--version') || effectiveArgs.includes('-v')) {
+    process.stdout.write(`${VERSION}\n`);
     return 0;
   }
 
-  if (effectiveArgs.includes('--version') || effectiveArgs.includes('-v')) {
-    process.stdout.write(`v${VERSION}\n`);
+  if (effectiveArgs.length === 0 || effectiveArgs.includes('--help') || effectiveArgs.includes('-h')) {
+    printHelp();
     return 0;
   }
 

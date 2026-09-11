@@ -1,6 +1,12 @@
 import { defineConfig } from 'vitest/config';
+import { readFileSync } from 'node:fs';
+
+const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
 export default defineConfig({
+  define: {
+    __PACKAGE_VERSION__: JSON.stringify(pkg.version),
+  },
   test: {
     globals: true,
     environment: 'node',
@@ -10,9 +16,14 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       include: ['src/**/*.ts'],
       exclude: [
-        'src/**/*.test.ts',
-        'src/**/types.ts',
+        'node_modules/**',
+        'dist/**',
+        '**/*.test.ts',
         'src/bin/**',
+        'src/index.ts',
+        'src/shared/types.ts',
+        'tsup.config.ts',
+        'vitest.config.ts',
       ],
       thresholds: {
         lines: 95,

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { writeFileSync, unlinkSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { runCli, parseArgs } from './cli.js';
+import { VERSION } from '../version.js';
 
 describe('CLI Argument Parser', () => {
   it('parses flags and positional arguments', () => {
@@ -66,10 +67,10 @@ describe('CLI Commands Execution', () => {
     expect(stdoutOutput).toContain('COMMANDS:');
   });
 
-  it('prints version with --version flag', async () => {
+  it('prints version with --version flag directly before help checks', async () => {
     const code = await runCli(['--version']);
     expect(code).toBe(0);
-    expect(stdoutOutput).toMatch(/^v\d+\.\d+\.\d+/);
+    expect(stdoutOutput.trim()).toBe(VERSION);
   });
 
   it('returns code 2 for unknown commands', async () => {

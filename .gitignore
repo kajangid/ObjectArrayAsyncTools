@@ -73,3 +73,5 @@ vite.config.ts.timestamp-*
 # Mic.
 .DS_Store
 .idea/
+/COMMANDS_LOG.md
+/prompt.md

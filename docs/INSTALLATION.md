@@ -1,6 +1,6 @@
 # Installation & Environment Configuration
 
-This guide provides instructions for installing and configuring `@omnidev-tools/object-array-async-tools` across package managers, runtimes, and TypeScript projects.
+This guide provides instructions for installing and configuring `@omnidev-tools/object-array-async-tools` across package managers, runtimes, import paradigms, and TypeScript projects.
 
 ---
 
@@ -113,7 +113,42 @@ export default {
 
 ---
 
-## 4. TypeScript Configuration (`tsconfig.json`)
+## 4. Root vs Subpath Import Patterns (Tree-Shaking)
+
+The package supports both root imports and isolated subpath imports:
+
+### Root Import Pattern
+Convenient when using multiple utilities across a module:
+```typescript
+import { deepClone, chunk, retry } from '@omnidev-tools/object-array-async-tools';
+```
+
+### Granular Subpath Import Pattern
+Ideal for frontend applications and micro-services where bundle size must be kept to an absolute minimum:
+```typescript
+// Object Utilities
+import { deepClone } from '@omnidev-tools/object-array-async-tools/deep-clone';
+import { deepEqual } from '@omnidev-tools/object-array-async-tools/deep-equal';
+import { objectDiff } from '@omnidev-tools/object-array-async-tools/object-diff';
+import { objectClean } from '@omnidev-tools/object-array-async-tools/object-clean';
+
+// Array Utilities
+import { chunk } from '@omnidev-tools/object-array-async-tools/chunk';
+import { groupBy, groupByMap } from '@omnidev-tools/object-array-async-tools/group-by';
+import { uniqueArray } from '@omnidev-tools/object-array-async-tools/unique-array';
+import { smartSort } from '@omnidev-tools/object-array-async-tools/smart-sort';
+
+// Async Utilities
+import { debounce } from '@omnidev-tools/object-array-async-tools/debounce';
+import { throttle } from '@omnidev-tools/object-array-async-tools/throttle';
+import { retry } from '@omnidev-tools/object-array-async-tools/retry';
+import { promiseTimeout } from '@omnidev-tools/object-array-async-tools/promise-timeout';
+import { AsyncQueue } from '@omnidev-tools/object-array-async-tools/async-queue';
+```
+
+---
+
+## 5. TypeScript Configuration (`tsconfig.json`)
 
 To ensure accurate resolution of type declaration files (`.d.ts` and `.d.cts`), configure `moduleResolution` in `tsconfig.json`:
 

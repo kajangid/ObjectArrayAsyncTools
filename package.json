@@ -26,6 +26,7 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "bin": {
     "oa-tools": "dist/bin/cli.cjs",
     "oa-clone": "dist/bin/cli.cjs",

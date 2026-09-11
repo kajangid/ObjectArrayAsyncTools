@@ -1,6 +1,6 @@
 # Features & API Reference Manual
 
-Complete API documentation, type signatures, parameter specifications, and code examples for all 13 tools in `@omnidev-tools/object-array-async-tools`.
+Complete API documentation, type signatures, parameter specifications, and code examples for all 13 tools, the compile-time `VERSION` constant, and CLI commands in `@omnidev-tools/object-array-async-tools`.
 
 ---
 
@@ -19,6 +19,8 @@ Complete API documentation, type signatures, parameter specifications, and code 
 - [11. retry](#11-retry)
 - [12. promise-timeout](#12-promise-timeout)
 - [13. async-queue](#13-async-queue)
+- [14. VERSION Constant](#14-version-constant)
+- [15. Standalone CLI Commands](#15-standalone-cli-commands)
 
 ---
 
@@ -528,3 +530,37 @@ await queue.addAll(jobs);
 await queue.onIdle();
 console.log('All image processing complete!');
 ```
+
+---
+
+## 14. VERSION Constant
+
+The compile-time package version string synchronized directly from `package.json` as the single source of truth.
+
+### Usage
+```typescript
+import { VERSION } from '@omnidev-tools/object-array-async-tools';
+
+console.log(`Current version: ${VERSION}`); // e.g. "1.0.0"
+```
+
+---
+
+## 15. Standalone CLI Commands
+
+The package provides the unified executable `oa-tools` along with individual binary aliases:
+
+| Command / Alias | Arguments & Flags | Description |
+|---|---|---|
+| `oa-tools clone` / `oa-clone` | `[file]` | Deep-clones input JSON from file or piped stdin. |
+| `oa-tools equal` | `<file1> <file2>` | Evaluates deep equality between two JSON files (exits 0 if equal, 1 if not). |
+| `oa-tools diff` / `oa-diff` | `<file1> [file2] [--deep] [--check]` | Generates structural diff. If `--check`, exits with code 1 when deltas are detected. |
+| `oa-tools clean` / `oa-clean` | `[file] [--empty-strings] [--empty-objects] [--empty-arrays] [--nans]` | Removes empty/nullish values from JSON input. |
+| `oa-tools chunk` / `oa-chunk` | `[file] --size <n>` | Splits input JSON array into smaller chunks of size `n`. |
+| `oa-tools group` | `[file] --by <property>` | Groups array of objects by property key. |
+| `oa-tools unique` | `[file] [--by <property>] [--deep]` | Removes duplicate elements from JSON array. |
+| `oa-tools sort` / `oa-sort` | `[file] [--by <property>] [--order asc\|desc] [--no-natural]` | Sorts JSON array elements with natural string collation. |
+| `oa-tools retry` / `oa-retry` | `[--retries <n>] [--delay <ms>] [--backoff exponential\|linear\|fixed] -- <cmd...>` | Retries shell command execution upon non-zero exit codes. |
+| `oa-tools timeout` / `oa-timeout`| `--ms <ms> -- <cmd...>` | Executes a command with deadline timeout, terminating process if deadline is exceeded. |
+| `--version` / `-v` | N/A | Prints package version directly to stdout. |
+| `--help` / `-h` | N/A | Displays full CLI usage instructions and command summaries. |

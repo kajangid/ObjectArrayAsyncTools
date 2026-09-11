@@ -1,6 +1,6 @@
 # Deployment & Release Workflow Guide
 
-This document outlines the step-by-step deployment process, semantic versioning procedures, automated publishing scripts, and GitHub Actions CI/CD pipeline for `@omnidev-tools/object-array-async-tools`.
+This document outlines the step-by-step deployment process, single source of truth versioning, automated publishing scripts, and GitHub Actions CI/CD pipeline for `@omnidev-tools/object-array-async-tools`.
 
 ---
 
@@ -19,8 +19,8 @@ The package defines an automated safety gate in `package.json`:
 
 Whenever `npm publish` is executed:
 1. `npm run typecheck`: Runs strict TypeScript validation with `tsc --noEmit`.
-2. `npm run test`: Runs the full 163-test Vitest suite across all 17 test files.
-3. `npm run build`: Compiles fresh dual ESM (`.mjs`), CJS (`.cjs`), and DTS (`.d.ts` / `.d.cts`) bundles via `tsup`.
+2. `npm run test`: Runs the full 168-test Vitest suite across all 18 test files.
+3. `npm run build`: Compiles fresh dual ESM (`.mjs`), CJS (`.cjs`), and DTS (`.d.ts` / `.d.cts`) bundles via `tsup`, baking in the version from `package.json`.
 
 ---
 
@@ -44,16 +44,18 @@ Run a dry-run to ensure only required distribution assets (`dist/`, `README.md`,
 npm run publish:dry
 ```
 
-### Step 4: Version Bumping
-Use the automated versioning scripts to update `package.json` and create an annotated git tag:
+### Step 4: Single Source of Truth Version Bumping
+`package.json` is the sole source of truth for the package version. When bumping versions, only `package.json` needs to be updated. The build pipeline (`tsup` and `vitest`) dynamically reads `package.json` and bakes `__PACKAGE_VERSION__` into the emitted binaries and bundles.
+
+Use the automated versioning scripts:
 ```bash
-# For backwards-compatible bug fixes
+# For backwards-compatible bug fixes (e.g. 1.0.0 -> 1.0.1)
 npm run bump:patch
 
-# For backwards-compatible new features
+# For backwards-compatible new features (e.g. 1.0.0 -> 1.1.0)
 npm run bump:minor
 
-# For breaking API changes
+# For breaking API changes (e.g. 1.0.0 -> 2.0.0)
 npm run bump:major
 ```
 
@@ -109,6 +111,9 @@ jobs:
 
       - name: Build Dual Bundles
         run: npm run build
+
+      - name: Test CLI Version Output
+        run: node ./dist/bin/cli.cjs --version
 
       - name: Dry-Run Publish Verification
         run: npm run publish:dry

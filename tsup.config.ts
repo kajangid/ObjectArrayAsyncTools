@@ -1,4 +1,7 @@
 import { defineConfig } from 'tsup';
+import { readFileSync } from 'node:fs';
+
+const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
 export default defineConfig({
   entry: {
@@ -26,6 +29,9 @@ export default defineConfig({
   treeshake: true,
   shims: true,
   cjsInterop: true,
+  define: {
+    __PACKAGE_VERSION__: JSON.stringify(pkg.version),
+  },
   outExtension({ format }) {
     return {
       js: format === 'esm' ? '.mjs' : '.cjs',
