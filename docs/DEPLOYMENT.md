@@ -1,6 +1,6 @@
 # Deployment & Release Workflow Guide
 
-This document outlines the step-by-step deployment process, single source of truth versioning, automated publishing scripts, and GitHub Actions CI/CD pipeline for `@omnidev-tools/object-array-async-tools`.
+This document outlines the step-by-step deployment process, single source of truth versioning, automated publishing scripts, and GitHub Actions CI/CD pipeline for `@kjangid/array-async-tools`.
 
 ---
 
@@ -11,144 +11,201 @@ The package defines an automated safety gate in `package.json`:
 ```json
 {
   "scripts": {
-    "prepublishOnly": "npm run typecheck && npm run test && npm run build",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run lint && npm run test && npm run build",
     "publish:dry": "npm publish --dry-run"
   }
 }
 ```
 
-Whenever `npm publish` is executed:
-1. `npm run typecheck`: Runs strict TypeScript validation with `tsc --noEmit`.
+Whenever `npm publish` is executed (locally or in CI):
+1. `npm run lint`: Runs strict TypeScript validation with `tsc --noEmit`.
 2. `npm run test`: Runs the full 168-test Vitest suite across all 18 test files.
 3. `npm run build`: Compiles fresh dual ESM (`.mjs`), CJS (`.cjs`), and DTS (`.d.ts` / `.d.cts`) bundles via `tsup`, baking in the version from `package.json`.
 
 ---
 
-## 2. Step-by-Step Publishing Workflow
+## 2. Release & Versioning Flow
+
+Releases are completely automated via Git tags and GitHub Actions. **Never manually edit the version string in `package.json`**.
+
+```text
+npm version patch | minor | major
+              ↓
+    git push --follow-tags
+              ↓
+      GitHub tag v1.2.3
+              ↓
+        GitHub Actions
+              ↓
+  npm ci → lint → test → build → verify tag
+              ↓
+   npm publish (OIDC + Provenance)
+              ↓
+        GitHub Release
+```
 
 ### Step 1: Clean Working Tree Check
-Ensure all changes are committed and working tree is clean:
+Ensure all changes are committed and the working tree is clean:
 ```bash
 git status
 ```
 
-### Step 2: Verify Type Safety & Test Pass Rate
+### Step 2: Run Local Validation
 ```bash
-npm run typecheck
-npm run test:coverage
+npm run lint
+npm test
+npm run build
 ```
 
-### Step 3: Verify Packaging Manifest
-Run a dry-run to ensure only required distribution assets (`dist/`, `README.md`, `LICENSE`, `package.json`) are included:
-```bash
-npm run publish:dry
-```
-
-### Step 4: Single Source of Truth Version Bumping
-`package.json` is the sole source of truth for the package version. When bumping versions, only `package.json` needs to be updated. The build pipeline (`tsup` and `vitest`) dynamically reads `package.json` and bakes `__PACKAGE_VERSION__` into the emitted binaries and bundles.
-
-Use the automated versioning scripts:
+### Step 3: Bump Version & Create Tag
+Use `npm version` to automatically increment the version in `package.json`, commit the change, and create a Git tag:
 ```bash
 # For backwards-compatible bug fixes (e.g. 1.0.0 -> 1.0.1)
-npm run bump:patch
+npm version patch
 
 # For backwards-compatible new features (e.g. 1.0.0 -> 1.1.0)
-npm run bump:minor
+npm version minor
 
 # For breaking API changes (e.g. 1.0.0 -> 2.0.0)
-npm run bump:major
+npm version major
 ```
 
-### Step 5: Publish to NPM
-Publish the package to the public NPM registry:
+### Step 4: Push Commit & Git Tag
+Push the version commit and the generated tag to GitHub:
 ```bash
-# Public package release
-npm publish --access public
+git push --follow-tags
 ```
 
 ---
 
-## 3. GitHub Actions CI/CD Workflow Specification
+## 3. GitHub Actions CI/CD Pipelines
 
-Below is the recommended continuous integration and deployment workflow file (`.github/workflows/ci.yml`):
+The repository employs two dedicated GitHub Actions workflows:
+
+### A. Continuous Integration (`.github/workflows/ci.yml`)
+Triggered on all pull requests and pushes to `main` and `master`.
 
 ```yaml
-name: CI/CD Pipeline
+name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
-    branches: [main]
-  release:
-    types: [published]
+    branches: [main, master]
 
 jobs:
   validate:
+    name: Lint, Test & Build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x, 22.x]
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Strict Typecheck
-        run: npm run typecheck
-
-      - name: Execute Tests with Coverage
-        run: npm run test:coverage
-
-      - name: Build Dual Bundles
-        run: npm run build
-
-      - name: Test CLI Version Output
-        run: node ./dist/bin/cli.cjs --version
-
-      - name: Dry-Run Publish Verification
-        run: npm run publish:dry
-
-  publish:
-    needs: validate
-    if: github.event_name == 'release' && github.event.action == 'published'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js 22
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          registry-url: 'https://registry.npmjs.org'
+          cache: "npm"
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: Publish with Provenance
+      - name: Run linter / typecheck
+        run: npm run lint
+
+      - name: Run Test Suite
+        run: npm test
+
+      - name: Build Package
+        run: npm run build
+```
+
+### B. Continuous Delivery (`.github/workflows/release.yml`)
+Triggered strictly when a Git tag matching `v*` is pushed.
+
+```yaml
+name: Release & Publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    name: Release & Publish to npm
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for npm OIDC Trusted Publishing
+      contents: write # Required to create GitHub Release
+
+    steps:
+      - name: Checkout Tagged Commit
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: "https://registry.npmjs.org"
+          cache: "npm"
+
+      - name: Check Node and npm versions
+        run: |
+          node --version
+          npm --version
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify Git tag matches package.json version
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+            echo "::error::Tag version ($TAG_VERSION) does not match package.json version ($PKG_VERSION)"
+            exit 1
+          fi
+          echo "Verified: Tag version ($TAG_VERSION) matches package.json ($PKG_VERSION)"
+
+      - name: Run linter / typecheck
+        run: npm run lint
+
+      - name: Run test suite
+        run: npm test
+
+      - name: Build package
+        run: npm run build
+
+      - name: Publish to npm via OIDC
         run: npm publish --access public --provenance
+
+      - name: Create GitHub Release
+        run: gh release create "$GITHUB_REF_NAME" --title "Release $GITHUB_REF_NAME" --generate-notes
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ---
 
-## 4. Package Provenance & Security Best Practices
+## 4. npm Trusted Publishing (OIDC) Setup
 
-When publishing to NPM:
-- **NPM Provenance**: Enable `--provenance` in GitHub Actions to cryptographically link the published package back to the specific GitHub commit and workflow execution.
-- **Two-Factor Authentication (2FA)**: Ensure publish access is configured with automated automation tokens or WebAuthn/TOTP 2FA.
+This pipeline uses **npm Trusted Publishing** via OpenID Connect (OIDC). No static API keys or long-lived secret tokens (`NPM_TOKEN`) are needed or stored in GitHub secrets.
+
+### One-Time Configuration Steps:
+1. Log in to your account on [npmjs.com](https://www.npmjs.com).
+2. Go to your package settings: `https://www.npmjs.com/package/@kjangid/array-async-tools/access` (or go to **Account Settings** → **Trusted Publishers** if creating the package for the first time).
+3. Under the **Trusted Publishers** section, click **"Add Trusted Publisher"** and select **"GitHub Actions"**.
+4. Enter the repository details:
+   - **GitHub Organization / User**: `kajangid`
+   - **Repository Name**: `ObjectArrayAsyncTools`
+   - **Workflow filename**: `release.yml`
+   - **Environment**: *(leave empty)*
+5. Click **"Add Publisher"**.
+
+### Security & Provenance:
+- **Zero Static Secrets**: Authentication is negotiated ephemeral-per-job using OIDC JWTs signed by GitHub and verified by npm.
+- **SLSA Provenance Attestation**: The `--provenance` flag generates cryptographic attestations via Sigstore, linking the published package directly back to the GitHub commit and workflow execution.

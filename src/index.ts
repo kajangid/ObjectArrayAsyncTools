@@ -1,5 +1,5 @@
 /**
- * @omnidev-tools/object-array-async-tools
+ * @kjangid/array-async-tools
  * Zero-runtime-dependency TypeScript utility package for object, array, and asynchronous data pipelines.
  */
 

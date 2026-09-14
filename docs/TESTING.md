@@ -1,6 +1,6 @@
 # Testing Strategy & Quality Assurance Report
 
-This document outlines the test architecture, test breakdown table matching actual test counts, security attack verification, and code coverage metrics for `@omnidev-tools/object-array-async-tools`.
+This document outlines the test architecture, test breakdown table matching actual test counts, security attack verification, and code coverage metrics for `@kjangid/array-async-tools`.
 
 ---
 

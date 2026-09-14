@@ -1,6 +1,6 @@
 # Operational Boundaries & System Limitations
 
-This document outlines the performance boundaries, runtime constraints, edge-case behaviors, and memory considerations for `@omnidev-tools/object-array-async-tools`.
+This document outlines the performance boundaries, runtime constraints, edge-case behaviors, and memory considerations for `@kjangid/array-async-tools`.
 
 ---
 

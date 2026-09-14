@@ -1,32 +1,25 @@
 {
-  "name": "@omnidev-tools/object-array-async-tools",
+  "name": "@kjangid/array-async-tools",
   "version": "1.0.0",
   "description": "Object, array, and async utilities for transforming data, managing collections, and controlling asynchronous workflows.",
-  "author": "OmniDev Tools",
+  "author": "Karan Jangid",
   "license": "MIT",
-  "keywords": [
-    "deep-clone",
-    "deep-equal",
-    "object-diff",
-    "object-clean",
-    "chunk",
-    "group-by",
-    "unique-array",
-    "smart-sort",
-    "debounce",
-    "throttle",
-    "retry",
-    "promise-timeout",
-    "async-queue",
-    "utilities",
-    "typescript",
-    "zero-dependencies"
-  ],
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kajangid/ObjectArrayAsyncTools.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/kajangid/ObjectArrayAsyncTools/issues"
+  },
+  "homepage": "https://github.com/kajangid/ObjectArrayAsyncTools#readme",
   "bin": {
     "oa-tools": "dist/bin/cli.cjs",
     "oa-clone": "dist/bin/cli.cjs",
@@ -115,7 +108,26 @@
     },
     "./package.json": "./package.json"
   },
+  "keywords": [
+    "deep-clone",
+    "deep-equal",
+    "object-diff",
+    "object-clean",
+    "chunk",
+    "group-by",
+    "unique-array",
+    "smart-sort",
+    "debounce",
+    "throttle",
+    "retry",
+    "promise-timeout",
+    "async-queue",
+    "utilities",
+    "typescript",
+    "zero-dependencies"
+  ],
   "scripts": {
+    "lint": "tsc --noEmit",
     "build": "tsup",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -124,7 +136,7 @@
     "bump:patch": "npm version patch",
     "bump:minor": "npm version minor",
     "bump:major": "npm version major",
-    "prepublishOnly": "npm run typecheck && npm run test && npm run build",
+    "prepublishOnly": "npm run lint && npm run test && npm run build",
     "publish:dry": "npm publish --dry-run"
   },
   "engines": {

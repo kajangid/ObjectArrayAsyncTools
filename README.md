@@ -1,11 +1,10 @@
-# @omnidev-tools/object-array-async-tools
+# @kjangid/array-async-tools
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](tsconfig.json)
 [![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-brightgreen.svg)](package.json)
 [![Module](https://img.shields.io/badge/Module-ESM%20%7C%20CJS-orange.svg)]()
-
-<!-- [![CI Status](https://img.shields.io/badge/CI-Passing-brightgreen.svg)]() -->
-
+[![CI](https://github.com/kajangid/ObjectArrayAsyncTools/actions/workflows/ci.yml/badge.svg)](https://github.com/kajangid/ObjectArrayAsyncTools/actions/workflows/ci.yml)
+[![Release](https://github.com/kajangid/ObjectArrayAsyncTools/actions/workflows/release.yml/badge.svg)](https://github.com/kajangid/ObjectArrayAsyncTools/actions/workflows/release.yml)
 [![npm version](https://img.shields.io/badge/npm-v1.0.0-blue.svg)]()
 [![Tests](https://img.shields.io/badge/Tests-101%20passed-success.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -20,7 +19,7 @@ Built natively for **Node.js (>= 18.0.0)**, **Modern Browsers**, **Bun**, **Deno
 
 ## Table of Contents
 
-- [@omnidev-tools/object-array-async-tools](#omnidev-toolsobject-array-async-tools)
+- [@kjangid/array-async-tools](#kjangidarray-async-tools)
   - [Table of Contents](#table-of-contents)
   - [Key Features](#key-features)
   - [Tools \& Utilities Overview](#tools--utilities-overview)
@@ -31,6 +30,9 @@ Built natively for **Node.js (>= 18.0.0)**, **Modern Browsers**, **Bun**, **Deno
     - [Exit Codes](#exit-codes)
   - [Security Architecture](#security-architecture)
   - [NPM Scripts](#npm-scripts)
+  - [Release \& Publishing (CI/CD)](#release--publishing-cicd)
+    - [Release Workflow](#release-workflow)
+    - [One-Time npm Trusted Publishing Configuration](#one-time-npm-trusted-publishing-configuration)
   - [Documentation Index](#documentation-index)
   - [License](#license)
 
@@ -71,22 +73,22 @@ Built natively for **Node.js (>= 18.0.0)**, **Modern Browsers**, **Bun**, **Deno
 
 ```bash
 # Using npm
-npm install @omnidev-tools/object-array-async-tools
+npm install @kjangid/array-async-tools
 
 # Using pnpm
-pnpm add @omnidev-tools/object-array-async-tools
+pnpm add @kjangid/array-async-tools
 
 # Using yarn
-yarn add @omnidev-tools/object-array-async-tools
+yarn add @kjangid/array-async-tools
 
 # Using bun
-bun add @omnidev-tools/object-array-async-tools
+bun add @kjangid/array-async-tools
 ```
 
 For global CLI usage:
 
 ```bash
-npm install -g @omnidev-tools/object-array-async-tools
+npm install -g @kjangid/array-async-tools
 ```
 
 ---
@@ -108,7 +110,7 @@ import {
   retry,
   promiseTimeout,
   AsyncQueue,
-} from "@omnidev-tools/object-array-async-tools";
+} from "@kjangid/array-async-tools";
 
 // 1. Safe Deep Cloning (Handles circular references)
 const graph: any = { name: "Node A" };
@@ -152,19 +154,19 @@ const data = await retry(
 To minimize bundle size in web applications, each utility can be imported individually via dedicated subpaths:
 
 ```typescript
-import { deepClone } from "@omnidev-tools/object-array-async-tools/deep-clone";
-import { deepEqual } from "@omnidev-tools/object-array-async-tools/deep-equal";
-import { objectDiff } from "@omnidev-tools/object-array-async-tools/object-diff";
-import { objectClean } from "@omnidev-tools/object-array-async-tools/object-clean";
-import { chunk } from "@omnidev-tools/object-array-async-tools/chunk";
-import { groupBy } from "@omnidev-tools/object-array-async-tools/group-by";
-import { uniqueArray } from "@omnidev-tools/object-array-async-tools/unique-array";
-import { smartSort } from "@omnidev-tools/object-array-async-tools/smart-sort";
-import { debounce } from "@omnidev-tools/object-array-async-tools/debounce";
-import { throttle } from "@omnidev-tools/object-array-async-tools/throttle";
-import { retry } from "@omnidev-tools/object-array-async-tools/retry";
-import { promiseTimeout } from "@omnidev-tools/object-array-async-tools/promise-timeout";
-import { AsyncQueue } from "@omnidev-tools/object-array-async-tools/async-queue";
+import { deepClone } from "@kjangid/array-async-tools/deep-clone";
+import { deepEqual } from "@kjangid/array-async-tools/deep-equal";
+import { objectDiff } from "@kjangid/array-async-tools/object-diff";
+import { objectClean } from "@kjangid/array-async-tools/object-clean";
+import { chunk } from "@kjangid/array-async-tools/chunk";
+import { groupBy } from "@kjangid/array-async-tools/group-by";
+import { uniqueArray } from "@kjangid/array-async-tools/unique-array";
+import { smartSort } from "@kjangid/array-async-tools/smart-sort";
+import { debounce } from "@kjangid/array-async-tools/debounce";
+import { throttle } from "@kjangid/array-async-tools/throttle";
+import { retry } from "@kjangid/array-async-tools/retry";
+import { promiseTimeout } from "@kjangid/array-async-tools/promise-timeout";
+import { AsyncQueue } from "@kjangid/array-async-tools/async-queue";
 ```
 
 ---
@@ -221,18 +223,84 @@ oa-tools timeout --ms 5000 -- npm test
 
 ## NPM Scripts
 
-| Script           | Command                                              | Purpose                                         |
-| ---------------- | ---------------------------------------------------- | ----------------------------------------------- |
-| `build`          | `tsup`                                               | Compiles dual ESM/CJS and `.d.ts` declarations. |
-| `test`           | `vitest run`                                         | Executes all 18 test suites once.               |
-| `test:watch`     | `vitest`                                             | Runs Vitest in interactive watch mode.          |
-| `test:coverage`  | `vitest run --coverage`                              | Generates V8 code coverage reports.             |
-| `typecheck`      | `tsc --noEmit`                                       | Strict TypeScript compiler validation.          |
-| `bump:patch`     | `npm version patch`                                  | Increments patch version.                       |
-| `bump:minor`     | `npm version minor`                                  | Increments minor version.                       |
-| `bump:major`     | `npm version major`                                  | Increments major version.                       |
-| `prepublishOnly` | `npm run typecheck && npm run test && npm run build` | Automated pre-release verification pipeline.    |
-| `publish:dry`    | `npm publish --dry-run`                              | Verifies tarball contents without publishing.   |
+| Script           | Command                                         | Purpose                                         |
+| ---------------- | ----------------------------------------------- | ----------------------------------------------- |
+| `lint`           | `tsc --noEmit`                                  | Strict TypeScript typechecking as linter gate.  |
+| `build`          | `tsup`                                          | Compiles dual ESM/CJS and `.d.ts` declarations. |
+| `test`           | `vitest run`                                    | Executes all 18 test suites once.               |
+| `test:watch`     | `vitest`                                        | Runs Vitest in interactive watch mode.          |
+| `test:coverage`  | `vitest run --coverage`                         | Generates V8 code coverage reports.             |
+| `typecheck`      | `tsc --noEmit`                                  | Strict TypeScript compiler validation.          |
+| `bump:patch`     | `npm version patch`                             | Increments patch version & creates git tag.     |
+| `bump:minor`     | `npm version minor`                             | Increments minor version & creates git tag.     |
+| `bump:major`     | `npm version major`                             | Increments major version & creates git tag.     |
+| `prepublishOnly` | `npm run lint && npm run test && npm run build` | Automated pre-release verification pipeline.    |
+| `publish:dry`    | `npm publish --dry-run`                         | Verifies tarball contents without publishing.   |
+
+---
+
+## Release & Publishing (CI/CD)
+
+This repository includes a production-ready, completely free CI/CD pipeline using **GitHub Actions**, **npm Trusted Publishing (OIDC)**, and **GitHub Releases**. No static secrets (`NPM_TOKEN`) are stored in GitHub.
+
+### Release Workflow
+
+```text
+npm version patch | minor | major
+              ↓
+    git push --follow-tags
+              ↓
+      GitHub tag v1.2.3
+              ↓
+        GitHub Actions
+              ↓
+  npm ci → lint → test → build → verify tag
+              ↓
+   npm publish (OIDC + Provenance)
+              ↓
+        GitHub Release
+```
+
+1. **Bump Version**: Never manually edit version in `package.json`. Use `npm version`:
+
+   ```bash
+   npm version patch   # Bug fixes (e.g. 1.0.0 -> 1.0.1)
+   # or
+   npm version minor   # New backwards-compatible features (1.0.0 -> 1.1.0)
+   # or
+   npm version major   # Breaking changes (1.0.0 -> 2.0.0)
+   ```
+
+   This automatically updates `package.json`, creates a Git commit, and creates a signed Git tag `vX.Y.Z`.
+
+2. **Push Commit & Tag**:
+
+   ```bash
+   git push --follow-tags
+   ```
+
+3. **Automated Publishing**:
+   - The `.github/workflows/release.yml` workflow triggers on the `v*` tag.
+   - Verifies the Git tag matches `package.json` version.
+   - Runs `npm ci` → `npm run lint` → `npm test` → `npm run build`.
+   - Publishes to npm using **OpenID Connect (OIDC)** with provenance attestation.
+   - Automatically drafts and publishes a GitHub Release with auto-generated release notes.
+
+### One-Time npm Trusted Publishing Configuration
+
+Before your first release, configure npmjs.com to trust GitHub Actions:
+
+1. Log in to [npmjs.com](https://www.npmjs.com).
+2. Navigate to your package settings: `https://www.npmjs.com/package/@kjangid/array-async-tools/access` (or go to **Account Settings** → **Trusted Publishers** if creating the package for the first time).
+3. Under **Trusted Publishers**, click **"Add Trusted Publisher"** and select **"GitHub Actions"**.
+4. Configure the publisher:
+   - **GitHub Organization / User**: `kajangid`
+   - **Repository**: `ObjectArrayAsyncTools`
+   - **Workflow filename**: `release.yml`
+   - **Environment**: _(leave blank)_
+5. Click **"Add Publisher"**.
+
+Once configured, releases occur automatically via Git tags without managing or rotating API tokens.
 
 ---
 
@@ -249,4 +317,4 @@ oa-tools timeout --ms 5000 -- npm test
 
 ## License
 
-MIT © [OmniDev Tools](LICENSE)
+MIT © [Karan Jangid](LICENSE)

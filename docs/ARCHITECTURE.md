@@ -1,6 +1,6 @@
 # System Architecture & Design Specification
 
-This document details the architectural principles, complete file structure, module boundaries, data flow, memory safety strategies, version synchronization design, and bundling pipeline for `@omnidev-tools/object-array-async-tools`.
+This document details the architectural principles, complete file structure, module boundaries, data flow, memory safety strategies, version synchronization design, and bundling pipeline for `@kjangid/array-async-tools`.
 
 ---
 
@@ -104,6 +104,7 @@ ObjectArrayAsyncTools/
 ## 3. Automated Version Streamlining (Single Source of Truth)
 
 To eliminate version drift across documentation, CLI output, and source code:
+
 1. **Single Source of Truth**: `package.json` is the sole authority for package versioning.
 2. **Build-Time Injection**: Both `tsup.config.ts` and `vitest.config.ts` read `package.json` dynamically and inject `__PACKAGE_VERSION__` via compile-time define:
    ```typescript
@@ -114,9 +115,7 @@ To eliminate version drift across documentation, CLI output, and source code:
 3. **Runtime Fallback**: `src/version.ts` references `__PACKAGE_VERSION__`, falling back to dynamic `package.json` reads if running unbundled:
    ```typescript
    export const VERSION: string =
-     typeof __PACKAGE_VERSION__ !== 'undefined'
-       ? __PACKAGE_VERSION__
-       : getPackageVersion();
+     typeof __PACKAGE_VERSION__ !== "undefined" ? __PACKAGE_VERSION__ : getPackageVersion();
    ```
 4. **CLI Immediate Output**: `src/bin/cli.ts` checks `--version` and `-v` prior to any other command checks, printing `VERSION + '\n'` directly.
 5. **Version Bumping**: When `npm version patch` (or minor/major) executes, only `package.json` is updated, and the build pipeline bakes the new version into the bundle automatically.
@@ -151,6 +150,7 @@ In JavaScript, assigning to properties named `__proto__`, `prototype`, or `const
 ```
 
 The package implements three defensive layers:
+
 1. **Key Filtering**: Traversal loops in `deepClone`, `objectClean`, and `objectDiff` explicitly skip `isDangerousKey(key)` properties.
 2. **Prototype-less Storage**: Dictionary outputs from `groupBy`, `createSafeRecord()`, and `objectDiff` are instantiated via `Object.create(null)`.
 3. **Safe Property Checkers**: Property membership uses `Object.prototype.hasOwnProperty.call(target, key)` to protect against objects where `hasOwnProperty` has been overridden.
@@ -160,6 +160,7 @@ The package implements three defensive layers:
 ## 5. Dual ESM & CommonJS Bundling Pipeline
 
 Bundling is orchestrated via `tsup` using `esbuild`:
+
 - **Dual Formats**:
   - `dist/**/*.mjs`: Pure ECMAScript modules with native `import`/`export`.
   - `dist/**/*.cjs`: CommonJS modules with `module.exports` and `require`.
