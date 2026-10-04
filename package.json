@@ -1,6 +1,6 @@
 {
   "name": "@kjangid/array-async-tools",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Object, array, and async utilities for transforming data, managing collections, and controlling asynchronous workflows.",
   "author": "Karan Jangid",
   "license": "MIT",
