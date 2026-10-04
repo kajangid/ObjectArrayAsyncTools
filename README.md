@@ -1,87 +1,43 @@
 # @kjangid/array-async-tools
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](tsconfig.json)
-[![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-brightgreen.svg)](package.json)
-[![Module](https://img.shields.io/badge/Module-ESM%20%7C%20CJS-orange.svg)]()
+[![npm version](https://img.shields.io/npm/v/@kjangid/array-async-tools.svg)](https://www.npmjs.com/package/@kjangid/array-async-tools)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](https://www.npmjs.com/package/@kjangid/array-async-tools)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/LICENSE)
 [![CI](https://github.com/kajangid/ObjectArrayAsyncTools/actions/workflows/ci.yml/badge.svg)](https://github.com/kajangid/ObjectArrayAsyncTools/actions/workflows/ci.yml)
-[![Release](https://github.com/kajangid/ObjectArrayAsyncTools/actions/workflows/release.yml/badge.svg)](https://github.com/kajangid/ObjectArrayAsyncTools/actions/workflows/release.yml)
-[![npm version](https://img.shields.io/badge/npm-v1.0.0-blue.svg)]()
-[![Tests](https://img.shields.io/badge/Tests-101%20passed-success.svg)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node](https://img.shields.io/badge/Node-%3E%3D18.0.0-green.svg)](package.json)
-[![Coverage](https://img.shields.io/badge/coverage-96.3%25-brightgreen.svg)](docs/TESTING.md)
+[![Tests](https://img.shields.io/badge/tests-168%20passed-success.svg)](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/TESTING.md)
+[![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-green.svg)](https://nodejs.org)
+[![Coverage](https://img.shields.io/badge/coverage-96%25-brightgreen.svg)](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/TESTING.md)
 
-A production-grade, **zero-runtime-dependency** TypeScript utility library and standalone CLI toolkit designed for high-performance data transformations, collection manipulation, and robust asynchronous control flow.
+Production-grade, **zero-runtime-dependency** TypeScript toolkit for transforming objects and arrays, managing collections, and orchestrating asynchronous workflows.
 
-Built natively for **Node.js (>= 18.0.0)**, **Modern Browsers**, **Bun**, **Deno**, and **Cloudflare Workers** with dual **ESM** (`.mjs`) and **CommonJS** (`.cjs`) output, tree-shakeable subpath exports, and comprehensive prototype pollution defenses.
+Built from first principles with dual **ESM** and **CommonJS** builds, granular tree-shakeable subpath exports, prototype pollution security guards, and a standalone CLI.
 
 ---
 
-## Table of Contents
+## Key Highlights
 
-- [@kjangid/array-async-tools](#kjangidarray-async-tools)
-  - [Table of Contents](#table-of-contents)
-  - [Key Features](#key-features)
-  - [Tools \& Utilities Overview](#tools--utilities-overview)
-  - [Installation](#installation)
-  - [Quick Start](#quick-start)
-  - [Subpath Imports (Tree-Shaking)](#subpath-imports-tree-shaking)
-  - [CLI Toolkit](#cli-toolkit)
-    - [Exit Codes](#exit-codes)
-  - [Security Architecture](#security-architecture)
-  - [NPM Scripts](#npm-scripts)
-  - [Release \& Publishing (CI/CD)](#release--publishing-cicd)
-    - [Release Workflow](#release-workflow)
-    - [One-Time npm Trusted Publishing Configuration](#one-time-npm-trusted-publishing-configuration)
-  - [Documentation Index](#documentation-index)
-  - [License](#license)
-
----
-
-## Key Features
-
-- **Zero Runtime Dependencies**: Every single utility is implemented from first principles. No hidden sub-dependencies, no supply-chain bloat.
-- **Dual ESM / CommonJS Architecture**: Seamless integration in both modern native ESM (`import`) and legacy CommonJS (`require`) runtimes with exact TypeScript type definitions (`.d.ts` / `.d.cts`).
-- **Security by Default**: Defenses against prototype pollution attacks (`__proto__`, `constructor`, `prototype`) across object cloning, diffing, grouping, and cleaning.
-- **Universal Runtime Support**: Fully functional across Node.js 18+, Bun, Deno, modern web browsers, and edge environments like Cloudflare Workers.
-- **Standalone CLI**: High-performance unified binary (`oa-tools`) and dedicated binary aliases (`oa-clone`, `oa-diff`, `oa-clean`, `oa-chunk`, `oa-sort`, `oa-retry`, `oa-timeout`) supporting stdin pipes and file arguments.
-- **100% Test Pass Rate**: Thorough test suites with >96% statement and branch coverage via Vitest and V8 coverage (168 tests across 18 test files).
-
----
-
-## Tools & Utilities Overview
-
-| #   | Utility                                                 | Category | Description                                                                                                                             |
-| --- | ------------------------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | [`deepClone`](docs/FEATURES.md#1-deep-clone)            | Object   | Independent deep copy of nested objects/arrays handling circular references, Maps, Sets, Dates, RegExps, TypedArrays, and Errors.       |
-| 2   | [`deepEqual`](docs/FEATURES.md#2-deep-equal)            | Object   | Recursive structural equality comparator for complex graphs, circular structures, Maps, Sets, and binary buffers.                       |
-| 3   | [`objectDiff`](docs/FEATURES.md#3-object-diff)          | Object   | Computes structural differences returning added, removed, and updated fields with flat dot-paths or nested hierarchies.                 |
-| 4   | [`objectClean`](docs/FEATURES.md#4-object-clean)        | Object   | Immutable cleaner filtering nulls, undefineds, empty strings, empty arrays, empty objects, and NaNs.                                    |
-| 5   | [`chunk`](docs/FEATURES.md#5-chunk)                     | Array    | Partitions arrays into uniform fixed-size batches for pagination, batch requests, and worker dispatching.                               |
-| 6   | [`groupBy` / `groupByMap`](docs/FEATURES.md#6-group-by) | Array    | Groups elements by key or callback into a prototype-free record (`Object.create(null)`) or an ES6 Map.                                  |
-| 7   | [`uniqueArray`](docs/FEATURES.md#7-unique-array)        | Array    | Removes duplicates while preserving order, supporting primitive fast-paths, key selectors, or deep structural equality.                 |
-| 8   | [`smartSort`](docs/FEATURES.md#8-smart-sort)            | Array    | Pure stable sorting supporting multi-field ordering, natural string collation (e.g. `v2` before `v10`), dates, and null placement.      |
-| 9   | [`debounce`](docs/FEATURES.md#9-debounce)               | Async    | Delays callback execution until after a quiet period, supporting leading/trailing edges, maxWait guarantees, `cancel()`, and `flush()`. |
-| 10  | [`throttle`](docs/FEATURES.md#10-throttle)              | Async    | Regulates execution frequency to at most once per time window with configurable leading/trailing edges.                                 |
-| 11  | [`retry`](docs/FEATURES.md#11-retry)                    | Async    | Automatically retries failed async tasks with exponential/linear backoff, full/half jitter, error filters, and AbortSignal support.     |
-| 12  | [`promiseTimeout`](docs/FEATURES.md#12-promise-timeout) | Async    | Enforces execution deadlines, rejecting with `TimeoutError` or triggering fallback handlers with automated timer teardown.              |
-| 13  | [`AsyncQueue`](docs/FEATURES.md#13-async-queue)         | Async    | Concurrency-limited worker queue supporting priority scheduling, per-task timeouts, pause/resume, and lifecycle hooks (`onIdle`).       |
+- **Zero Runtime Dependencies**: Every utility implemented from scratch. Zero supply-chain vulnerabilities, zero dependency bloat.
+- **Universal Runtime Support**: Seamless execution across Node.js (>= 18), Modern Browsers, Bun, Deno, and Cloudflare Workers.
+- **Dual ESM / CJS Builds**: Full native support for `import` and `require` with first-class TypeScript declarations (`.d.ts` / `.d.cts`).
+- **Security by Default**: Built-in defenses against prototype pollution (`__proto__`, `constructor`, `prototype`) across object mutations.
+- **Tree-Shakeable Subpaths**: Import from root or via granular subpaths (`@kjangid/array-async-tools/chunk`) with `"sideEffects": false`.
+- **Standalone CLI Toolkit**: High-performance unified binary (`oa-tools`) and dedicated aliases with stdin pipe support.
 
 ---
 
 ## Installation
 
 ```bash
-# Using npm
+# npm
 npm install @kjangid/array-async-tools
 
-# Using pnpm
+# pnpm
 pnpm add @kjangid/array-async-tools
 
-# Using yarn
+# yarn
 yarn add @kjangid/array-async-tools
 
-# Using bun
+# bun
 bun add @kjangid/array-async-tools
 ```
 
@@ -93,228 +49,148 @@ npm install -g @kjangid/array-async-tools
 
 ---
 
-## Quick Start
+## Hero Quick Start
+
+### 1. Data Cleaning, Deduplication & Natural Sorting
 
 ```typescript
-import {
-  deepClone,
-  deepEqual,
-  objectDiff,
-  objectClean,
-  chunk,
-  groupBy,
-  uniqueArray,
-  smartSort,
-  debounce,
-  throttle,
-  retry,
-  promiseTimeout,
-  AsyncQueue,
-} from "@kjangid/array-async-tools";
+import { objectClean, uniqueArray, smartSort } from "@kjangid/array-async-tools";
 
-// 1. Safe Deep Cloning (Handles circular references)
-const graph: any = { name: "Node A" };
-graph.self = graph;
-const clonedGraph = deepClone(graph);
-console.log(clonedGraph.self === clonedGraph); // true (independent clone)
+const users = [
+  { id: 2, name: "Bob", email: "", role: "admin", version: "v10.0" },
+  { id: 1, name: "Alice", email: "alice@example.com", role: null, version: "v2.0" },
+  { id: 2, name: "Bob", email: "", role: "admin", version: "v10.0" }, // duplicate
+];
 
-// 2. Structural Deep Equality
-console.log(deepEqual({ a: [1, 2], d: new Date(0) }, { a: [1, 2], d: new Date(0) })); // true
+// Clean empty fields, deduplicate by ID, and sort naturally by version
+const cleanUsers = users.map((u) => objectClean(u, { emptyStrings: true }));
+const uniqueUsers = uniqueArray(cleanUsers, { by: (u) => u.id });
+const sortedUsers = smartSort(uniqueUsers, { by: (u) => u.version, order: "asc" });
 
-// 3. Object Diffing
-const before = { id: 1, config: { theme: "light", debug: false } };
-const after = { id: 1, config: { theme: "dark", port: 8080 } };
-const diff = objectDiff(before, after);
-// diff.updated -> { 'config.theme': { before: 'light', after: 'dark' } }
-// diff.removed -> { 'config.debug': false }
-// diff.added   -> { 'config.port': 8080 }
+console.log(sortedUsers);
+// [
+//   { id: 1, name: 'Alice', email: 'alice@example.com', version: 'v2.0' },
+//   { id: 2, name: 'Bob', role: 'admin', version: 'v10.0' }
+// ]
+```
 
-// 4. Object Cleaning
-const dirty = { name: "Alice", bio: "", role: null, flags: [] };
-const clean = objectClean(dirty, { emptyStrings: true, emptyArrays: true });
-// { name: 'Alice' }
+### 2. Resilient Async Queue with Retries & Deadlines
 
-// 5. Array Chunking
-const batches = chunk([1, 2, 3, 4, 5], 2);
-// [[1, 2], [3, 4], [5]]
+```typescript
+import { AsyncQueue, retry, promiseTimeout } from "@kjangid/array-async-tools";
 
-// 6. Resilient Async Retries
-const data = await retry(
-  async ({ attempt }) => {
-    return await fetchUserData(attempt);
-  },
-  { retries: 3, backoff: "exponential", factor: 2 },
-);
+// Concurrency-limited queue (up to 3 concurrent workers)
+const queue = new AsyncQueue({ concurrency: 3 });
+
+async function processOrder(orderId: number) {
+  return queue.add(async () => {
+    // Retry with exponential backoff and enforce a 5-second deadline
+    return await promiseTimeout(
+      retry(() => fetchOrderData(orderId), { retries: 3, backoff: "exponential" }),
+      { ms: 5000 }
+    );
+  }, { priority: orderId === 1 ? 10 : 0 });
+}
+
+await Promise.all([1, 2, 3, 4, 5].map(processOrder));
 ```
 
 ---
 
-## Subpath Imports (Tree-Shaking)
+## Core Utilities Matrix
 
-To minimize bundle size in web applications, each utility can be imported individually via dedicated subpaths:
-
-```typescript
-import { deepClone } from "@kjangid/array-async-tools/deep-clone";
-import { deepEqual } from "@kjangid/array-async-tools/deep-equal";
-import { objectDiff } from "@kjangid/array-async-tools/object-diff";
-import { objectClean } from "@kjangid/array-async-tools/object-clean";
-import { chunk } from "@kjangid/array-async-tools/chunk";
-import { groupBy } from "@kjangid/array-async-tools/group-by";
-import { uniqueArray } from "@kjangid/array-async-tools/unique-array";
-import { smartSort } from "@kjangid/array-async-tools/smart-sort";
-import { debounce } from "@kjangid/array-async-tools/debounce";
-import { throttle } from "@kjangid/array-async-tools/throttle";
-import { retry } from "@kjangid/array-async-tools/retry";
-import { promiseTimeout } from "@kjangid/array-async-tools/promise-timeout";
-import { AsyncQueue } from "@kjangid/array-async-tools/async-queue";
-```
+| Utility | Category | Description | Subpath Import |
+|---|---|---|---|
+| [`deepClone`](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/FEATURES.md#1-deep-clone) | Object | Independent deep copy handling circular references, Maps, Sets, Dates, RegExps, TypedArrays. | `@kjangid/array-async-tools/deep-clone` |
+| [`deepEqual`](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/FEATURES.md#2-deep-equal) | Object | Recursive structural equality comparator for complex graphs, circular structures, Maps, Sets. | `@kjangid/array-async-tools/deep-equal` |
+| [`objectDiff`](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/FEATURES.md#3-object-diff) | Object | Computes structural differences returning added, removed, and updated fields. | `@kjangid/array-async-tools/object-diff` |
+| [`objectClean`](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/FEATURES.md#4-object-clean) | Object | Immutable cleaner filtering nulls, undefineds, empty strings, empty arrays, and empty objects. | `@kjangid/array-async-tools/object-clean` |
+| [`chunk`](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/FEATURES.md#5-chunk) | Array | Partitions arrays into uniform fixed-size batches for pagination and bulk requests. | `@kjangid/array-async-tools/chunk` |
+| [`groupBy`](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/FEATURES.md#6-group-by) | Array | Groups elements into a prototype-free record (`Object.create(null)`) or an ES6 Map. | `@kjangid/array-async-tools/group-by` |
+| [`uniqueArray`](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/FEATURES.md#7-unique-array) | Array | Deduplicates elements with primitive fast-paths, key selectors, or deep equality. | `@kjangid/array-async-tools/unique-array` |
+| [`smartSort`](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/FEATURES.md#8-smart-sort) | Array | Pure stable merge-sort supporting natural collation (`v2` before `v10`), dates, and null placement. | `@kjangid/array-async-tools/smart-sort` |
+| [`debounce`](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/FEATURES.md#9-debounce) | Async | Delays callback until quiet period passes with leading/trailing edges, `cancel()`, and `flush()`. | `@kjangid/array-async-tools/debounce` |
+| [`throttle`](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/FEATURES.md#10-throttle) | Async | Regulates execution frequency to at most once per time window with configurable edges. | `@kjangid/array-async-tools/throttle` |
+| [`retry`](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/FEATURES.md#11-retry) | Async | Retries async tasks with exponential/linear backoff, jitter, predicates, and `AbortSignal`. | `@kjangid/array-async-tools/retry` |
+| [`promiseTimeout`](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/FEATURES.md#12-promise-timeout) | Async | Enforces execution deadlines with custom errors, fallback handlers, and timer cleanup. | `@kjangid/array-async-tools/promise-timeout` |
+| [`AsyncQueue`](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/FEATURES.md#13-async-queue) | Async | Concurrency-limited worker queue with priority scheduling, pause/resume, and lifecycle hooks. | `@kjangid/array-async-tools/async-queue` |
 
 ---
 
-## CLI Toolkit
+## Standalone CLI Toolkit
 
-The package provides a unified binary `oa-tools` along with dedicated binary aliases for standard command-line data processing:
+The package includes a unified CLI executable `oa-tools` and dedicated command aliases:
 
 ```bash
-# Display CLI help
+# Display general help
 oa-tools --help
 
-# Piped stdin: chunk array into batches of 2
-cat users.json | oa-tools chunk --size 2
+# Chunk JSON array via piped stdin
+cat users.json | oa-tools chunk --size 10
 
-# Compare two JSON files
+# Compare two JSON files for deep structural equality
 oa-tools equal file1.json file2.json
 
-# View JSON structural diff (exits with code 1 if changed with --check)
-oa-tools diff file1.json file2.json --check
+# Check structural diff (exits with code 1 if differences found)
+oa-tools diff old.json new.json --check
 
-# Clean empty fields from payload
-cat input.json | oa-tools clean --empty-strings --empty-objects
+# Clean unwanted empty values from a payload
+cat payload.json | oa-tools clean --empty-strings --empty-arrays
 
-# Sort dataset naturally by a property
-oa-tools sort records.json --by version --order asc
+# Sort dataset naturally by a nested field
+oa-tools sort dataset.json --by version --order asc
 
-# Run an external command with retry logic
-oa-tools retry --retries 3 --delay 2000 -- curl -f https://api.example.com/health
+# Run shell command with retries and exponential backoff
+oa-tools retry --retries 3 --delay 1000 -- curl -f https://api.example.com/health
 
-# Run an external command with a timeout deadline (milliseconds)
+# Enforce execution timeout on a command (milliseconds)
 oa-tools timeout --ms 5000 -- npm test
 ```
+
+### Binary Aliases
+
+| Alias | Description |
+|---|---|
+| `oa-clone` | Deeply clone JSON input |
+| `oa-diff` | Output structural differences |
+| `oa-clean` | Remove null/empty fields |
+| `oa-chunk` | Split array into chunks |
+| `oa-sort` | Naturally sort array data |
+| `oa-retry` | Run shell command with retries |
+| `oa-timeout` | Enforce execution deadline on command |
 
 ### Exit Codes
 
 - `0`: Success (or identical structures).
-- `1`: Operation failure / Difference detected with `--check` / Task execution failed.
-- `2`: CLI usage syntax error / Missing required arguments.
+- `1`: Operation failure / Difference detected with `--check` / Command execution failed.
+- `2`: CLI usage syntax error / Missing required parameters.
 
 ---
 
-## Security Architecture
+## Documentation
 
-1. **Prototype Pollution Protection**:
-   - Traversal logic in `deepClone`, `objectClean`, and `objectDiff` explicitly skips `__proto__`, `prototype`, and `constructor` properties.
-   - `groupBy` returns prototype-less dictionaries created via `Object.create(null)` so grouping on attacker-controlled keys (e.g. `'__proto__'`) cannot poison Object prototypes.
-2. **Safe Object Creation**:
-   - Exported `createSafeRecord()` and `safeAssign()` utilities ensure zero prototype pollution across object transformations.
-3. **Timer Teardown**:
-   - `promiseTimeout`, `retry`, `debounce`, and `throttle` actively remove listeners and clear pending timers immediately on resolution, rejection, or abort, eliminating event-loop memory leaks.
+Comprehensive guides and technical documentation hosted on GitHub:
 
----
-
-## NPM Scripts
-
-| Script           | Command                                         | Purpose                                         |
-| ---------------- | ----------------------------------------------- | ----------------------------------------------- |
-| `lint`           | `tsc --noEmit`                                  | Strict TypeScript typechecking as linter gate.  |
-| `build`          | `tsup`                                          | Compiles dual ESM/CJS and `.d.ts` declarations. |
-| `test`           | `vitest run`                                    | Executes all 18 test suites once.               |
-| `test:watch`     | `vitest`                                        | Runs Vitest in interactive watch mode.          |
-| `test:coverage`  | `vitest run --coverage`                         | Generates V8 code coverage reports.             |
-| `typecheck`      | `tsc --noEmit`                                  | Strict TypeScript compiler validation.          |
-| `bump:patch`     | `npm version patch`                             | Increments patch version & creates git tag.     |
-| `bump:minor`     | `npm version minor`                             | Increments minor version & creates git tag.     |
-| `bump:major`     | `npm version major`                             | Increments major version & creates git tag.     |
-| `prepublishOnly` | `npm run lint && npm run test && npm run build` | Automated pre-release verification pipeline.    |
-| `publish:dry`    | `npm publish --dry-run`                         | Verifies tarball contents without publishing.   |
+- [Features & API Reference](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/FEATURES.md): Detailed API signatures, option types, and examples for all 13 tools.
+- [Architecture & Design](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/ARCHITECTURE.md): Module boundaries, memory models, and dual-bundle design.
+- [Installation Guide](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/INSTALLATION.md): Setup for Node, Browsers, Bun, Deno, and Cloudflare Workers.
+- [Limitations & Boundaries](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/LIMITATIONS.md): Recursion limits, non-cloneable types, and memory tradeoffs.
+- [Testing & Quality Assurance](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/TESTING.md): Test matrix, coverage reports, and security attack test cases.
+- [Deployment & CI/CD](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/DEPLOYMENT.md): Automated GitHub Actions pipeline and npm OIDC Trusted Publishing.
+- [Contributing Guide](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/CONTRIBUTING.md): Local development workflow and npm development scripts.
 
 ---
 
-## Release & Publishing (CI/CD)
+## Limitations
 
-This repository includes a production-ready, completely free CI/CD pipeline using **GitHub Actions**, **npm Trusted Publishing (OIDC)**, and **GitHub Releases**. No static secrets (`NPM_TOKEN`) are stored in GitHub.
-
-### Release Workflow
-
-```text
-npm version patch | minor | major
-              ↓
-    git push --follow-tags
-              ↓
-      GitHub tag v1.2.3
-              ↓
-        GitHub Actions
-              ↓
-  npm ci → lint → test → build → verify tag
-              ↓
-   npm publish (OIDC + Provenance)
-              ↓
-        GitHub Release
-```
-
-1. **Bump Version**: Never manually edit version in `package.json`. Use `npm version`:
-
-   ```bash
-   npm version patch   # Bug fixes (e.g. 1.0.0 -> 1.0.1)
-   # or
-   npm version minor   # New backwards-compatible features (1.0.0 -> 1.1.0)
-   # or
-   npm version major   # Breaking changes (1.0.0 -> 2.0.0)
-   ```
-
-   This automatically updates `package.json`, creates a Git commit, and creates a signed Git tag `vX.Y.Z`.
-
-2. **Push Commit & Tag**:
-
-   ```bash
-   git push --follow-tags
-   ```
-
-3. **Automated Publishing**:
-   - The `.github/workflows/release.yml` workflow triggers on the `v*` tag.
-   - Verifies the Git tag matches `package.json` version.
-   - Runs `npm ci` → `npm run lint` → `npm test` → `npm run build`.
-   - Publishes to npm using **OpenID Connect (OIDC)** with provenance attestation.
-   - Automatically drafts and publishes a GitHub Release with auto-generated release notes.
-
-### One-Time npm Trusted Publishing Configuration
-
-Before your first release, configure npmjs.com to trust GitHub Actions:
-
-1. Log in to [npmjs.com](https://www.npmjs.com).
-2. Navigate to your package settings: `https://www.npmjs.com/package/@kjangid/array-async-tools/access` (or go to **Account Settings** → **Trusted Publishers** if creating the package for the first time).
-3. Under **Trusted Publishers**, click **"Add Trusted Publisher"** and select **"GitHub Actions"**.
-4. Configure the publisher:
-   - **GitHub Organization / User**: `kajangid`
-   - **Repository**: `ObjectArrayAsyncTools`
-   - **Workflow filename**: `release.yml`
-   - **Environment**: _(leave blank)_
-5. Click **"Add Publisher"**.
-
-Once configured, releases occur automatically via Git tags without managing or rotating API tokens.
-
----
-
-## Documentation Index
-
-- [Architecture Guide](docs/ARCHITECTURE.md): Runtime design, memory models, module decomposition, and bundling design.
-- [Installation Guide](docs/INSTALLATION.md): Setup instructions for Node, Bun, Deno, Browsers, and Cloudflare Workers.
-- [Features Reference](docs/FEATURES.md): Comprehensive API reference, type signatures, and real-world code examples for all 13 tools.
-- [Limitations & Boundaries](docs/LIMITATIONS.md): Edge cases, recursion boundaries, memory limits, and performance considerations.
-- [Testing & Quality Guide](docs/TESTING.md): Test matrix, coverage reports, and security attack test cases.
-- [Deployment Guide](docs/DEPLOYMENT.md): Step-by-step npm release workflow, automated CI/CD, and publishing checklist.
+- **Recursion Limits**: Functions with recursive traversals (`deepClone`, `deepEqual`, `objectDiff`, `objectClean`) are bounded by the engine's call stack (~8,000–10,000 levels).
+- **Non-Cloneable Types**: In `deepClone`, functions, closures, promises, weak references (`WeakMap`/`WeakSet`), and DOM nodes are copied by reference.
+- **Merge-Sort Auxiliary Memory**: `smartSort` implements a stable merge-sort ensuring immutability, requiring $O(N)$ temporary memory during sort operations.
+- **Timer Clamping**: `debounce`, `throttle`, and `promiseTimeout` rely on platform timers subject to standard event-loop scheduling and tab-throttling constraints.
+- See [Limitations Guide](https://github.com/kajangid/ObjectArrayAsyncTools/blob/main/docs/LIMITATIONS.md) for complete details.
 
 ---
 
 ## License
 
-MIT © [Karan Jangid](LICENSE)
+MIT © [Karan Jangid](https://github.com/kajangid)
